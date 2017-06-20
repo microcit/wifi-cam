@@ -13,6 +13,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import org.apache.http.conn.util.InetAddressUtils;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -44,6 +45,7 @@ import org.java_websocket.framing.FrameBuilder;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import uk.co.ptti.poc.emc.R;
 
 //import com.google.android.gms.ads.*;
 
@@ -52,11 +54,11 @@ public class MainActivity extends Activity
     public static String TAG="TEAONLY";
     private final int ServerPort = 8080;
     private final int StreamingPort = 8088;
-    private final int PictureWidth = 480;
-    private final int PictureHeight = 360;
+    private final int PictureWidth = 48;
+    private final int PictureHeight = 36;
     private final int MediaBlockNumber = 3;
     private final int MediaBlockSize = 1024*512;
-    private final int EstimatedFrameNumber = 30;
+    private final int EstimatedFrameNumber = 15;
     private final int StreamingInterval = 100;
 
     private StreamingServer streamingServer = null;
@@ -85,13 +87,13 @@ public class MainActivity extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // application setting
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         Window win = getWindow();
         win.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // load and setup GUI
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.cam_main);
         
         /* removed AD
         AdView adView = new AdView(this);
@@ -117,7 +119,7 @@ public class MainActivity extends Activity
         }
 
         if ( initWebServer() ) {
-            initAudio();
+            //initAudio();
             initCamera();
         } else {
             return;
@@ -137,7 +139,8 @@ public class MainActivity extends Activity
         super.onDestroy();
     }
 
-    @Override
+    @SuppressLint("NewApi")
+	@Override
     public void onPause() {
         super.onPause();
 
@@ -160,6 +163,13 @@ public class MainActivity extends Activity
 
     @Override
     public void onBackPressed() {
+    	cameraView.Release();
+    	try {
+			streamingServer.stop();
+		} catch (IOException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         super.onBackPressed();
     }
 

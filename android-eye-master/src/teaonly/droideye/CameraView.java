@@ -1,8 +1,10 @@
 package teaonly.droideye;
 
+import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
+import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.AutoFocusCallback;
@@ -118,9 +120,34 @@ public class CameraView implements SurfaceHolder.Callback{
         }
         camera_.setPreviewCallbackWithBuffer(cb);
     }
+    
+    private int getFrontCameraId(){
+        int camId = -1;
+        int numberOfCameras = Camera.getNumberOfCameras();
+        CameraInfo ci = new CameraInfo();
+
+        for(int i = 0;i < numberOfCameras;i++){
+            Camera.getCameraInfo(i,ci);
+            if(ci.facing == CameraInfo.CAMERA_FACING_FRONT){
+                camId = i;
+            }
+        }
+
+        return camId;
+    }
 
     private void initCamera() {
-        camera_ = Camera.open();
+       
+        
+            int cameraId = getFrontCameraId();
+
+            if(cameraId != -1){
+            	 camera_ = Camera.open(cameraId);
+            }else{
+            	 camera_ = Camera.open();
+            }
+       
+        
         procSize_ = camera_.new Size(0, 0);
         Camera.Parameters p = camera_.getParameters();
 
@@ -131,7 +158,7 @@ public class CameraView implements SurfaceHolder.Callback{
         p.setPreviewSize(procSize_.width, procSize_.height);
 
         camera_.setParameters(p);
-        //camera_.setDisplayOrientation(90);
+        camera_.setDisplayOrientation(90);
         try {
             camera_.setPreviewDisplay(surfaceHolder_);
         } catch ( Exception ex) {

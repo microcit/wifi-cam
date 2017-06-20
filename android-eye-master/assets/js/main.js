@@ -45,7 +45,10 @@ var connect = function() {
 $(document).ready(function() {
     //$("#btnPlay").prop('disabled', false);
 
-    $("#btnPlay").click( function() {
+    $("#btnPlay").click( clickActionDo());
+
+});
+function clickActionDo () {
         if( myState == 0) {
             myState = 1;
             $("#btnPlay").html("Stop")
@@ -76,6 +79,4 @@ $(document).ready(function() {
         } else if (myState != -1) {
             location.reload();
         }
-    });
-
-});
+    }
