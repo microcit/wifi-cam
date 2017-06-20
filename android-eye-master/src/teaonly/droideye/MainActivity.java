@@ -45,7 +45,7 @@ import org.java_websocket.framing.FrameBuilder;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
-import uk.co.ptti.poc.emc.R;
+import uk.co.ptti.poc.emc.camstream.R;
 
 //import com.google.android.gms.ads.*;
 
